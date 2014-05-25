@@ -485,11 +485,6 @@ service map1_del /system/bin/sdptool del 0x1ff17
     disabled
     oneshot
 
-service mpdecision /system/bin/mpdecision --no_sleep --avg_comp
-    class core
-    user root
-    disabled
-
 service netmgrd /system/bin/netmgrd
     class core
 
@@ -504,11 +499,6 @@ service p2p_supplicant /system/bin/wpa_supplicant \
     socket wpa_wlan0 dgram 660 wifi wifi
     disabled
     oneshot
-
-service pnpmgr /system/bin/pnpmgr -c /system/etc/pnp.bin
-    class core
-    user system
-    group system
 
 service ptt_socket_app /system/bin/ptt_socket_app
     class main
@@ -684,47 +674,3 @@ on property:init.svc.bootanim=stopped
     # Switch to ROW and balanced mode after boot for better UX
     setprop sys.perf.profile 1
     write /sys/block/mmcblk0/queue/scheduler row
-
-# CM Performance Profiles
-on property:sys.perf.profile=0
-    write /sys/class/devfreq/qcom,cpubw.42/governor "powersave"
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor conservative
-    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor conservative
-    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor conservative
-    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor conservative
-    write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
-    start mpdecision
-
-on property:sys.perf.profile=1
-    write /sys/class/devfreq/qcom,cpubw.42/governor "msm_cpufreq"
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "ondemand"
-    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "ondemand"
-    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "ondemand"
-    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "ondemand"
-
-    write /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate "50000"
-    write /sys/devices/system/cpu/cpufreq/ondemand/up_threshold "90"
-    write /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy "1"
-    write /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor "2"
-    write /sys/devices/system/cpu/cpufreq/ondemand/down_differential "10"
-    write /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_multi_core "70"
-    write /sys/devices/system/cpu/cpufreq/ondemand/down_differential_multi_core "3"
-    write /sys/devices/system/cpu/cpufreq/ondemand/optimal_freq "960000"
-    write /sys/devices/system/cpu/cpufreq/ondemand/sync_freq "960000"
-    write /sys/devices/system/cpu/cpufreq/ondemand/input_boost "1190400"
-    write /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load "80"
-    write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
-    start mpdecision
-
-on property:sys.perf.profile=2
-    stop mpdecision
-    write /sys/devices/system/cpu/cpu0/online 1
-    write /sys/devices/system/cpu/cpu1/online 1
-    write /sys/devices/system/cpu/cpu2/online 1
-    write /sys/devices/system/cpu/cpu3/online 1
-    write /sys/class/devfreq/qcom,cpubw.42/governor "performance"
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor performance
-    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor performance
-    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor performance
-    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor performance
-    write /sys/class/kgsl/kgsl-3d0/devfreq/governor performance
