@@ -30,7 +30,7 @@ $(call inherit-product, device/htc/m8/device.mk)
 PRODUCT_NAME := full_m8
 PRODUCT_DEVICE := m8
 PRODUCT_BRAND := htc
-PRODUCT_MANUFACTURER := htc
+PRODUCT_MANUFACTURER := HTC
 PRODUCT_MODEL := m8
 
 # inherit from the EOS vendor, if present
