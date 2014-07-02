@@ -39,6 +39,9 @@ PRODUCT_PACKAGES += \
     cir_fw_update \
     libhtcirinterface_jni
 
+# Dot View Case
+PRODUCT_PACKAGES += Dotcase
+
 # Ramdisk
 PRODUCT_PACKAGES += \
     fstab.qcom \
