@@ -65,35 +65,11 @@ on init
     symlink /storage/usbdisk /usbdisk
     symlink /storage/usbdisk /mnt/usbdisk
 
-# init PnPMgr node
-    chmod 664 /sys/power/pnpmgr/apps/media_mode
-    chown media system /sys/power/pnpmgr/apps/media_mode
-    chown system /sys/power/pnpmgr/apps/activity_trigger
-    chown system /sys/power/pnpmgr/apps/non_activity_trigger
-    chown system /sys/power/perflock
-    chown system /sys/power/launch_event
-    chown system /sys/power/powersave
-    chown system /sys/power/cpufreq_ceiling
-    chown system /sys/power/cpunum_floor
-    chown system /sys/power/cpunum_ceiling
     chown root system /sys/module/lowmemorykiller/parameters/adj
     chmod 0664 /sys/module/lowmemorykiller/parameters/adj
     chown root system /sys/module/lowmemorykiller/parameters/minfree
     chmod 0664 /sys/module/lowmemorykiller/parameters/minfree
     chown system /sys/power/wait_for_fb_status
-
-    write /sys/power/pnpmgr/hotplug/mp_decision_ms 50
-    write /sys/power/pnpmgr/hotplug/mp_max_cpus 4
-    write /sys/power/pnpmgr/hotplug/mp_min_cpus 1
-    write /sys/power/pnpmgr/hotplug/mp_ns "0 1.1 2.1 3.1"
-    write /sys/power/pnpmgr/hotplug/mp_nw "0 1.9 2.7 3.5"
-    write /sys/power/pnpmgr/hotplug/mp_ts "0 190 240 240"
-    write /sys/power/pnpmgr/hotplug/mp_tw "0 140 90 90"
-    write /sys/power/pnpmgr/hotplug/mp_util_high_and "0 35 0 0"
-    write /sys/power/pnpmgr/hotplug/mp_util_high_or "0 75 400 400"
-    write /sys/power/pnpmgr/hotplug/mp_util_low_and "0 30 400 400"
-    write /sys/power/pnpmgr/hotplug/mp_util_low_or "0 20 0 0"
-    write /sys/power/pnpmgr/apps/activity_trigger "booting"
 
 # HTC SSD Battery - BEGIN
     chown system system /sys/class/power_supply/battery/full_level_dis_batt_chg
@@ -489,6 +465,12 @@ service map1_del /system/bin/sdptool del 0x1ff17
     disabled
     oneshot
 
+service mpdecision /system/bin/mpdecision --avg_comp
+    class main
+    user root
+    group root system
+    disabled
+
 service netmgrd /system/bin/netmgrd
     class core
 
@@ -588,17 +570,6 @@ on property:init.svc.bootanim=stopped
     write /sys/module/lowmemorykiller/parameters/adj "2,4,7,8,9,12"
     write /sys/module/lowmemorykiller/parameters/minfree "15360,18432,21504,23040,24576,30720"
 
-on property:init.svc.thermald=stopped
-    write /sys/power/pnpmgr/thermal/thermal_final 9999999
-    write /sys/power/pnpmgr/thermal/thermal_final_cpu 9999999
-    write /sys/power/pnpmgr/thermal/thermal_c0 9999999
-    write /sys/power/pnpmgr/thermal/thermal_c1 9999999
-    write /sys/power/pnpmgr/thermal/thermal_c2 9999999
-    write /sys/power/pnpmgr/thermal/thermal_c3 9999999
-    write /sys/power/pnpmgr/thermal/thermal_g0 999999999
-    write /sys/power/pnpmgr/thermal/thermal_final_gpu 999999999
-    write /sys/power/pnpmgr/thermal/thermal_batt 0
-
 on property:init.svc.wpa_supplicant=stopped
     stop dhcpcd
 
@@ -671,19 +642,29 @@ on property:init.svc.bootanim=stopped
     write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "interactive"
     write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "interactive"
     write /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay "20000 1400000:40000 1700000:20000"
-    write /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load 90
-    write /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq 1190400
-    write /sys/devices/system/cpu/cpufreq/interactive/io_is_busy 1
+    write /sys/devices/system/cpu/cpufreq/interactive/check_fast_target_loads 95
+    write /sys/devices/system/cpu/cpufreq/interactive/check_fast_target_loads "50 1000000:66"
+    write /sys/devices/system/cpu/cpufreq/interactive/check_fast_timer_rate 15000
+    write /sys/devices/system/cpu/cpufreq/interactive/freq_calc_thresh 2265600
+    write /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load 0
+    write /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq 1497600
+    write /sys/devices/system/cpu/cpufreq/interactive/io_is_busy 0
     write /sys/devices/system/cpu/cpufreq/interactive/target_loads "85 1500000:90 1800000:70"
     write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time "40000 1700000:80000"
-    write /sys/devices/system/cpu/cpufreq/interactive/timer_rate "60000 500000:40000 1500000:30000 2000000:20000"
+    write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 30000
     write /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor 100000
-    write /sys/devices/system/cpu/cpufreq/interactive/sync_freq 1036800
-    write /sys/devices/system/cpu/cpufreq/interactive/up_threshold_any_cpu_load 50
-    write /sys/devices/system/cpu/cpufreq/interactive/up_threshold_any_cpu_freq 1190400
-    write /sys/devices/system/cpu/cpufreq/interactive/timer_slack "-1 800000:30000 1100000:40000 1700000:20000"
+    write /sys/devices/system/cpu/cpufreq/interactive/sync_freq 1267200
+    write /sys/devices/system/cpu/cpufreq/interactive/up_threshold_any_cpu_load 75
+    write /sys/devices/system/cpu/cpufreq/interactive/up_threshold_any_cpu_freq 1574400
+    write /sys/devices/system/cpu/cpufreq/interactive/timer_slack -1
+    write /sys/module/msm_hotplug/cpus_boosted 1
+    write /sys/module/msm_hotplug/down_lock_duration 500
+    write /sys/module/msm_hotplug/boost_lock_duration 2500
+    write /sys/module/msm_hotplug/update_rates "200 5:100 50:50 350:200"
+    write /sys/module/msm_hotplug/fast_lane_load 100
 
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
     write /dev/cpuctl/apps/cpu.notify_on_migrate 1
 
     write /sys/block/mmcblk0/queue/scheduler row
+    start mpdecision
