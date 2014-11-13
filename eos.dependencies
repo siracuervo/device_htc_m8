@@ -1,0 +1,25 @@
+[
+  {
+    "repository": "device_qcom_common",
+    "target_path": "device/qcom/common"
+  },
+  {
+    "repository": "hardware_qcom_fm",
+    "target_path": "hardware/qcom/fm"
+  },
+  {
+    "repository": "hardware_qcom_audio",
+    "target_path": "hardware/qcom/audio-caf/default",
+    "branch": "lp5.0-caf-8974"
+  },
+  {
+    "repository": "hardware_qcom_display",
+    "target_path": "hardware/qcom/display-caf/msm8974",
+    "branch": "lp5.0-caf-8974"
+  },
+  {
+    "repository": "hardware_qcom_media",
+    "target_path": "hardware/qcom/media-caf/msm8974",
+    "branch": "lp5.0-caf-8974"
+  }
+]
