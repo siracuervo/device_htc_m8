@@ -40,7 +40,7 @@ ro.device.screen_res=1080x1920
 com.qc.hardware=true
 persist.thermal.monitor=true
 ro.qc.sdk.sensors.gestures=true
-ro.vendor.extension_library=/vendor/lib/libqc-opt.so
+ro.vendor.extension_library=/vendor/lib/libqti-perfd-client.so
 
 # Audio
 #audio.offload.buffer.size.kb=32
