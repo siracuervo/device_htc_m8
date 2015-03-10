@@ -24,10 +24,16 @@
 # Inherit m8-specific vendor tree
 $(call inherit-product-if-exists, vendor/htc/m8/m8-vendor.mk)
 
+# Inherit from our omni product configuration
+$(call inherit-product, vendor/omni/config/common.mk)
+
+# Pull in GSM-specific stuff such as APNs
+$(call inherit-product, vendor/omni/config/gsm.mk)
+
 # Inherit from m8
 $(call inherit-product, device/htc/m8/device.mk)
 
-PRODUCT_NAME := full_m8
+PRODUCT_NAME := omni_m8
 PRODUCT_DEVICE := m8
 PRODUCT_BRAND := htc
 PRODUCT_MANUFACTURER := HTC
